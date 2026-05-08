@@ -1,87 +1,94 @@
 # 🎬 Sistema de Gestão de Cinemas (atvd_07_05)
 
-Projeto criado a partir de uma atividade em aula de Engenharia de Software.
+Projeto criado a partir de uma atividade em aula.
 
-Este sistema é uma aplicação de terminal desenvolvida em **Python** que simula a gestão de uma rede de cinemas. Ele permite cadastrar unidades de cinema, registrar filmes, organizar sessões e controlar a venda de ingressos (público) respeitando as regras de negócio de capacidade máxima.
+Este sistema é uma aplicação interativa de terminal desenvolvida em **Python** que simula a gestão de uma rede de cinemas. O objetivo principal é demonstrar a aplicação da arquitetura **MVC (Model-View-Controller)** aliada aos padrões **Service** e **Repository**, garantindo separação de responsabilidades e facilitando a manutenção do código. O sistema também implementa o conceito de controle de acesso baseado em papéis, separando as funcionalidades por perfil de usuário.
 
 ---
 
-## 🏗️ Arquitetura do Projeto
+## 🏗️ Arquitetura Utilizada
 
-O projeto foi construído utilizando a arquitetura **MVC (Model-View-Controller)** combinada com os padrões **Service** e **Repository**. Essa separação de responsabilidades torna o código mais limpo, organizado e fácil de manter.
+* **Models (`models.py`):** Define as entidades e estruturas de dados do domínio (Cinema, Filme, Sessão).
+* **Repository (`repository.py`):** Isola toda a lógica de persistência e comunicação com o banco de dados SQLite. Nenhuma regra de negócio é tratada aqui.
+* **Service (`service.py`):** Atua como o "cérebro" da aplicação, contendo todas as validações e regras de negócio (ex: garantir que o público não exceda a capacidade do cinema).
+* **Controller (`controller.py`):** Faz a ponte e o roteamento entre as entradas do usuário (View) e as regras do sistema (Service).
+* **View (`view/`):** Camada de apresentação dividida por perfis de acesso:
+    * `view_func.py`: Interface exclusiva para funcionários (operações de escrita/cadastro).
+    * `view_publico.py`: Interface para o público geral (operações de leitura/consulta).
+* **Main (`main.py`):** Ponto de entrada e roteador principal da aplicação, responsável por identificar o perfil do usuário e direcioná-lo para a View correta.
 
-* **Model:** Define as entidades do domínio (Cinema, Filme, Sessão).
-* **Repository:** Isola a lógica de acesso ao banco de dados (SQLite). Nenhuma regra de negócio fica aqui.
-* **Service:** O "cérebro" do sistema. Contém as regras de negócio (ex: validar se o público não excede a capacidade do cinema).
-* **Controller:** Faz a ponte entre a interface (View) e a lógica (Service).
-* **View (`main.py`):** A interface de interação com o usuário através do terminal.
-
-### **Estrutura de Arquivos ->**
+**Estrutura ->**
 ```text
 atvd_07_05/
 │
 ├── models/
-│   └── models.py        # Entidades de dados
+│   └── models.py
 ├── repository/
-│   └── repository.py    # Comunicação com o SQLite
+│   └── repository.py
 ├── service/
-│   └── service.py       # Validações e Regras de Negócio
+│   └── service.py
 ├── controller/
-│   └── controller.py    # Orquestração de chamadas
-└── main.py              # Menu interativo (View) e inicialização
+│   └── controller.py
+├── view/
+│   ├── view_func.py
+│   └── view_publico.py
+└── main.py
 
 ```
 
 ---
 
-## ✨ Funcionalidades
+## ✨ Funcionalidades Principais
 
-O sistema conta com um menu interativo que permite:
+O sistema é dividido em dois grandes módulos de acesso:
 
-1. **Cadastrar Cinemas:** Nome, capacidade máxima de público e endereço.
-2. **Cadastrar Filmes:** Título, duração, diretor e gênero.
-3. **Criar Sessões:** Vincula um filme a um cinema em uma data e hora específicas.
-4. **Registrar Público:** Adiciona o número de espectadores a uma sessão (com validação de capacidade máxima do local).
-5. **Consultas:**
-* Listar todos os Cinemas.
-* Listar todos os Filmes.
-* Consultar Sessões detalhadas (com cruzamento de dados mostrando o nome do filme e do cinema).
-* Filtrar as sessões de um cinema específico.
+**🔐 Painel do Funcionário (Requer Matrícula)**
+
+* **Gestão de Cinemas:** Cadastro de novas unidades informando nome, capacidade e endereço.
+* **Gestão de Filmes:** Cadastro do catálogo contendo título, duração, diretor e gênero.
+* **Controle de Sessões:** Agendamento de exibições vinculando Filmes a Cinemas em datas e horários específicos.
+* **Registro de Público:** Controle de venda de ingressos com validação estrita da capacidade máxima do local.
+
+**🍿 Área do Público (Acesso Livre)**
+
+* **Consultas Integradas:** * Listagem individual de Cinemas e Filmes em cartaz.
+* Listagem geral de Sessões (cruzando dados para exibir os nomes do filme e do local).
+* Filtro de Sessões específicas por ID do Cinema.
 
 
 
 ---
 
-## 🚀 Como Executar o Projeto
+## 🚀 Como Executar
 
-O projeto foi desenvolvido para ser simples e não requer a instalação de bibliotecas externas complexas, utilizando apenas as bibliotecas nativas do Python (`sqlite3`, `dataclasses`).
+O projeto utiliza apenas bibliotecas nativas do Python (`sqlite3`, `dataclasses`), não sendo necessário instalar dependências externas complexas.
 
 ### Pré-requisitos
 
-* **Python 3.x** instalado na sua máquina.
+* **Python 3.x** instalado.
 
-### Passo a Passo
+### Passos
 
-1. **Clone este repositório** (ou baixe os arquivos):
+1. Clone o repositório para a sua máquina local:
 ```bash
-git clone [https://github.com/SEU_USUARIO/atvd_07_05.git](https://github.com/SEU_USUARIO/atvd_07_05.git)
+git clone [https://github.com/leandrojcoelho-feob/atvd_07_05.git](https://github.com/leandrojcoelho-feob/atvd_07_05.git)
 
 ```
 
 
-2. **Acesse a pasta do projeto:**
+2. Navegue até a pasta raiz do projeto:
 ```bash
 cd atvd_07_05
 
 ```
 
 
-3. **Execute o arquivo principal:**
+3. Inicie a aplicação:
 ```bash
 python main.py
 
 ```
 
+> **Nota:** Na primeira execução, a aplicação inicializará automaticamente a configuração do SQLite, criando o arquivo de banco de dados (`cinema.db`) e todas as tabelas necessárias na raiz do projeto.
 
-
-> **Nota:** Ao rodar o sistema pela primeira vez, o próprio código se encarregará de criar o arquivo do banco de dados (`cinema.db`) e montar todas as tabelas necessárias automaticamente.
+```
